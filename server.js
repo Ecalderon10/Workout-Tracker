@@ -20,8 +20,8 @@ useFindandModify: false,
 });
 
 
-app.use(require("./contollers/apiRoutes"));
-app.use(require("./contollers/htmlRoutes"));
+app.use(require("./controllers/apiRoutes"));
+app.use(require("./controllers/htmlRoutes"));
 
 
 app.listen(PORT, () => {

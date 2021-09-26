@@ -35,19 +35,25 @@ router.put("/workouts/:id", (req,res) => {
     .catch((err) => {
     res.status(500).json(err);
     })
-})
+});
 
 
 router.get("/workouts/range", async (req,res) => {
- try {
-     const listOfWorkouts = await db.Workout.aggreagate([{
-        $addFields: {
-        totalDuration: {$sum: "$excercises.duration"},
-        totalWeight: {$sum: "$exercises.weight"},
-        totalSets: { $sum: "$excercises.sets"},
-        totalReps: { $sum: "$excercises.distance"},
-        totalDistance:{ $sum: "$excerises.distance"},
-        },
-     }])
- }
-})
+    try { const listOfworkouts = await db.Workout.aggregate([{
+    $addFields: {
+    totalDuration: {$sum: "$excercises.duration"},
+    totalWeight: {$sum: "$exercises.weight"},
+    totalSets: { $sum: "$excercises.sets"},
+    totalReps: { $sum: "$excercises.distance"},
+    totalDistance:{ $sum: "$excerises.distance"},
+    },
+    }]);
+return res.json(listOfworkouts)
+} catch(err) {
+res.status(400).json(err);
+}
+});
+
+
+module.exports = router;
+
