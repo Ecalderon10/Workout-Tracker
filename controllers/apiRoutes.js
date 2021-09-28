@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const db = require ("../models");
 
+
+
 router.get("/workouts", (req,res) => {
- const getData = db.Workout.find({})
+ db.Workout.find({})
  .then((dbWorkout) => {
     res.json(dbWorkout)
  })
@@ -13,8 +15,8 @@ router.get("/workouts", (req,res) => {
 
 
 
-router.post("/workouts", ({body}, res) => {
-const postData = db.Workout.create(body)
+router.post("/workouts", ({ body }, res) => {
+db.Workout.create(body)
 .then((dbWorkout) => {
 res.json(dbWorkout);
 })
@@ -25,7 +27,7 @@ res.status(500).json(err);
 
 
 router.put("/workouts/:id", (req,res) => {
-    const updateData = db.Workout.findOneAndUpdate({_id: req.params.id}, 
+    db.Workout.findOneAndUpdate({_id: req.params.id}, 
     {$inc: {totalDuration: req.body.duaration},
     $push: { excercises: req.body},
     },{ new: true })
@@ -39,16 +41,16 @@ router.put("/workouts/:id", (req,res) => {
 
 
 router.get("/workouts/range", async (req,res) => {
-    try { const listOfworkouts = await db.Workout.aggregate([{
+    try { const allWorkouts = await db.Workout.aggregate([{
     $addFields: {
-    totalDuration: {$sum: "$excercises.duration"},
+    totalDuration: {$sum: "$exercises.duration"},
     totalWeight: {$sum: "$exercises.weight"},
-    totalSets: { $sum: "$excercises.sets"},
-    totalReps: { $sum: "$excercises.distance"},
-    totalDistance:{ $sum: "$excerises.distance"},
+    totalSets: { $sum: "$exercises.sets"},
+    totalReps: { $sum: "$exercises.reps"},
+    totalDistance:{ $sum: "$exercises.distance"},
     },
     }]);
-return res.json(listOfworkouts)
+return res.json(allWorkouts)
 } catch(err) {
 res.status(400).json(err);
 }
